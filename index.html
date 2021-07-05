@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Findcity</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <style>
+      body{
+        background-color: #d5d5d5;
+        background: khaki;
+        height: 100vh
+      }
+
+
+      ul {
+        padding: 0.5rem;
+      }
+
+      li {
+        list-style-type: none;
+        background-color: #c4d4dd;
+        margin: 1rem;
+        padding: 1rem;
+      }
+
+    </style>
+    
+</head>
+<body>
+    <div class="container-fluid d-flex flex-column justify-content-between h-100">
+        <div class="row d-flex justify-content-center align-items-center h-75">
+            <div class="col-12 col-sm-6 mt-3 text-center">
+                <h1 class="my-3 ">Findcity</h1>
+                <form>
+                    <div class="form-group">
+                    
+                        <input type="text" maxlength="5" class="form-control p-3"  id="cp" placeholder="saisir un code postal" title="Uniquement les codes postaux de la France">
+                        
+                    </div>
+                </form> 
+                <div id="villes"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 bg-warning d-flex justify-content-center align-items-center p-2">
+                &copy; Layesall
+            </div>
+        </div>
+    </div>
+
+    <script>
+      document.querySelector('#cp').addEventListener("input", function () {
+          if (this.value.length == 5 ){
+              let url = `https://geo.api.gouv.fr/communes?codePostal=${this.value}&fields=nom,code,codesPostaux,codeDepartement,codeRegion,population,&format=json&geometry=centre`;
+
+              //let urlCom = `https://geo.api.gouv.fr/communes?codePostal=78000`;
+
+              fetch(url).then((response) => response.json().then((data) => {
+                  console.log(data);
+                  let affichage = '<br><ul>';
+                  for(let ville of data){
+                      affichage += `<li>${ville.nom} - ${ville.population} habitants</li>`;
+                  }
+                  affichage += '</ul>';
+                  document.querySelector("#villes").innerHTML = affichage;
+              })
+              
+              ).catch((err) => console.log('Erreur : ' + err));
+          }
+      });
+    </script>
+</body>
+</html>
